@@ -3,10 +3,12 @@ package com.example.mycalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import org.mariuszgromada.math.mxparser.*;
 
 public class MainActivity extends AppCompatActivity {
     EditText display;
@@ -41,7 +43,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void equalbtn(View view) {
+        String userexp = display.getText().toString();
+        Expression exp = new Expression(userexp);
+        String result = String.valueOf(exp.calculate());
 
+        display.setText(result);
+        display.setSelection(result.length());
     }
 
     public void onebtn(View view) {
@@ -57,7 +64,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btndelete(View view) {
+        int cursorpos = display.getSelectionStart();
+        int textLen = display.getText().length();
 
+        if (cursorpos != 0 && textLen != 0)
+        {
+            SpannableStringBuilder selection = (SpannableStringBuilder) display.getText();
+            selection.replace(cursorpos-1,cursorpos,"");
+            display.setText(selection);
+            display.setSelection(cursorpos-1);
+
+        }
     }
 
     public void btndivide(View view) {
@@ -73,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnclear(View view) {
-        updateTEXT("");
+       display.setText("");
     }
 
     public void btnmultiply(View view) {
